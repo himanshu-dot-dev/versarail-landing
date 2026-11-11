@@ -197,174 +197,226 @@
         </div>
       </div>
 
-      <!-- INTERACTIVE DESKTOP APP PREVIEW -->
+      <!-- INTERACTIVE DESKTOP APP PREVIEW (Mirrors VersaRail AI Electron Shell) -->
       <div class="app-window-wrap" aria-label="Interactive VersaRail AI desktop workspace preview">
         <div class="app-window" id="appPreview">
-          <!-- Custom Frameless Titlebar (40px style) -->
+          <!-- Custom Frameless Titlebar (TitleBar.tsx style: Left Logo, Right Reload + Win Orbs) -->
           <div class="window-top">
             <div class="window-title-left">
-              <div class="traffic" aria-hidden="true"><b></b><b></b><b></b></div>
-              <span class="window-brand-pill">
-                <svg viewBox="0 0 64 64" width="13" height="13" aria-hidden="true">
-                  <path d="M13 16H24L34 37L29 46L13 16Z" fill="#818cf8"/>
-                  <path d="M29 46L40 16H51L35 49C33.8 51.4 30.2 51.4 29 46Z" fill="#38bdf8"/>
-                </svg>
-                <span>VERSARAIL AI</span>
-                <small>/ versarail-core</small>
-              </span>
+              <svg class="titlebar-logo" viewBox="0 0 64 64" width="16" height="16" aria-hidden="true">
+                <path d="M12 15H24L34.5 37.5L29 47L12 15Z" fill="#818cf8"/>
+                <path d="M29 47L40 15H52L35.5 49.5C34.2 52 30.2 52 29 47Z" fill="#38bdf8"/>
+              </svg>
+              <span class="window-app-title">VersaRail AI</span>
             </div>
             <div class="window-top-right">
-              <span class="window-status" id="previewHealthBadge">
-                <span id="previewHealthText">GEMINI 2.5 FLASH · 184MS</span>
-              </span>
+              <button type="button" class="titlebar-reload" id="previewReloadBtn" title="Reload preview state">
+                <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+                </svg>
+                <span>Reload</span>
+              </button>
+              <span class="titlebar-sep" aria-hidden="true"></span>
+              <div class="win-controls" aria-hidden="true">
+                <span class="win-orb win-min">
+                  <svg viewBox="0 0 10 10" width="7" height="7"><path d="M2 5H8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+                </span>
+                <span class="win-orb win-max">
+                  <svg viewBox="0 0 10 10" width="7" height="7"><path d="M5 2V8M2 5H8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+                </span>
+                <span class="win-orb win-close">
+                  <svg viewBox="0 0 10 10" width="7" height="7"><path d="M2.2 2.2L7.8 7.8M7.8 2.2L2.2 7.8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+                </span>
+              </div>
             </div>
           </div>
 
-          <div class="app-layout">
-            <!-- Left Navigation Sidebar -->
+          <div class="app-layout inspector-open" id="appLayout">
+            <!-- Left Navigation Sidebar (Sidebar.tsx) -->
             <aside class="app-sidebar" aria-label="Desktop workspace views">
-              <div class="project-pill">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>
-                </svg>
-                <div class="project-pill-text">
-                  <small>ACTIVE PROJECT</small>
-                  <strong>versarail-core</strong>
+              <div class="project-pill" title="Active Workspace">
+                <div class="project-pill-left">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>
+                  </svg>
+                  <div class="project-pill-text">
+                    <small>ACTIVE PROJECT</small>
+                    <strong>versarail-core</strong>
+                  </div>
                 </div>
+                <svg class="unfold-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/>
+                </svg>
               </div>
 
-              <div class="side-label">WORKSPACE</div>
-              <button type="button" class="side-item active" data-view="chat">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                </svg>
-                <span>Chat &amp; Diff</span>
-              </button>
-              <button type="button" class="side-item" data-view="providers">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="3"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/>
-                </svg>
-                <span>AI Providers</span>
-              </button>
-              <button type="button" class="side-item" data-view="permissions">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
-                <span>Permissions</span>
-              </button>
-              <button type="button" class="side-item" data-view="quotas">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>
-                </svg>
-                <span>Usage &amp; Quotas</span>
-              </button>
+              <div class="side-nav-scroll">
+                <button type="button" class="side-item active" data-view="chat">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                  <span>Chat</span>
+                  <span class="side-add" aria-hidden="true">+</span>
+                </button>
+
+                <div class="recent-chats">
+                  <div class="recent-chats-head">RECENT CHATS (2)</div>
+                  <button type="button" class="recent-chat-item active" data-chat-topic="atomic">
+                    <strong>Harden atomic writer</strong>
+                    <small>2m ago</small>
+                  </button>
+                  <button type="button" class="recent-chat-item" data-chat-topic="failover">
+                    <strong>Provider 429 routing</strong>
+                    <small>1h ago</small>
+                  </button>
+                </div>
+
+                <button type="button" class="side-item" data-view="providers">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/>
+                  </svg>
+                  <span>AI Providers</span>
+                </button>
+
+                <button type="button" class="side-item" data-view="quotas">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>
+                  </svg>
+                  <span>Usage &amp; Quotas</span>
+                </button>
+
+                <button type="button" class="side-item" data-view="permissions">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  </svg>
+                  <span>Permissions</span>
+                </button>
+              </div>
 
               <div class="sidebar-bottom">
-                <div class="avatar">
-                  <img src="/assets/providers/gemini.svg" alt="" width="14" height="14">
-                </div>
-                <div>
-                  <strong>BYOK Keyring</strong>
-                  <small>OS safeStorage · WAL</small>
-                </div>
+                <button type="button" class="sidebar-profile-btn" id="sidebarSettingsBtn" title="Inspect Security &amp; Permissions" aria-label="Inspect Security and Permissions">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                  </svg>
+                </button>
               </div>
             </aside>
 
             <!-- Center Dynamic View Area -->
             <div class="app-main">
-              <!-- VIEW 1: CHAT + DIFFVIEWER + INSPECTOR -->
+              <!-- VIEW 1: CHATVIEW + DIFFVIEWER + PROMPTCOMPOSER -->
               <div class="preview-pane active" data-pane="chat">
-                <div class="app-heading">
-                  <div>
-                    <span class="crumb">CHAT / EXECUTION #842</span>
-                    <h3>Atomic write &amp; hash guard</h3>
+                <!-- ChatView Top Context Bar (ChatView.tsx L923) -->
+                <div class="chat-context-bar">
+                  <div class="chat-context-left">
+                    <span class="chat-title-text" id="chatContextTitle">Harden atomic writer</span>
+                    <span class="chat-ready-pill" id="previewHealthText">Ready</span>
                   </div>
-                  <div class="inspector-tabs" role="tablist" aria-label="Inspector tabs">
-                    <button type="button" class="ins-tab active" data-inspector="diff" role="tab" aria-selected="true">Diff</button>
-                    <button type="button" class="ins-tab" data-inspector="files" role="tab" aria-selected="false">Files</button>
-                    <button type="button" class="ins-tab" data-inspector="activity" role="tab" aria-selected="false">Activity</button>
-                  </div>
-                </div>
-
-                <!-- Subpanel: Diff Viewer -->
-                <div class="inspector-panel active" data-inspector-pane="diff">
-                  <div class="timeline-compact">
-                    <span class="tl-done">
-                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                      <span>Baseline SHA-256 verified (18ms)</span>
-                    </span>
-                    <span class="tl-done">
-                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                      <span>Unified patch staged</span>
-                    </span>
-                  </div>
-
-                  <div class="diff-card">
-                    <div class="diff-card-head">
-                      <code>src/main/changes/atomic-writer.ts</code>
-                      <span class="diff-stats"><em class="add">+4</em> <em class="del">-1</em></span>
-                    </div>
-                    <pre class="diff-code"><code><span class="diff-hunk">@@ -42,4 +42,7 @@ export async function commitFile(req) {</span>
-<span class="diff-del">-  await fs.writeFile(req.targetPath, req.nextContent)</span>
-<span class="diff-add">+  const baseline = await sha256(req.targetPath)</span>
-<span class="diff-add">+  if (baseline !== req.expectedHash) throw new ConflictError()</span>
-<span class="diff-add">+  await writeTempAndFsync(tmpPath, req.nextContent)</span>
-<span class="diff-add">+  await fs.rename(tmpPath, req.targetPath)</span></code></pre>
-                    <div class="diff-card-actions" id="diffActionRow">
-                      <button type="button" class="mini-btn mini-btn-primary" id="acceptDiffBtn">Accept Changes</button>
-                      <button type="button" class="mini-btn mini-btn-ghost" id="rejectDiffBtn">Reject</button>
-                      <span class="diff-status-note" id="diffStatusNote">Pre-commit conflict check armed</span>
-                    </div>
+                  <div class="chat-context-actions">
+                    <button type="button" class="ctx-btn" id="openConfigViewBtn" title="Configure Models">
+                      <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+                      </svg>
+                      <span>Config</span>
+                    </button>
+                    <button type="button" class="ctx-btn ctx-btn-active" id="toggleInspectorBtn" aria-pressed="true" title="Toggle Workspace Files">
+                      <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/>
+                      </svg>
+                      <span>Files</span>
+                    </button>
                   </div>
                 </div>
 
-                <!-- Subpanel: Files Tree -->
-                <div class="inspector-panel" data-inspector-pane="files">
-                  <div class="file-tree-card">
-                    <div class="file-row"><span>src/main/changes/atomic-writer.ts</span><em class="tag-mod">M</em></div>
-                    <div class="file-row"><span>src/main/security/permission-broker.ts</span><em class="tag-ok">LOCKED</em></div>
-                    <div class="file-row"><span>src/main/providers/failover-engine.ts</span><em class="tag-ok">READY</em></div>
-                    <div class="file-row excluded"><span>.env · .git/ · ~/.ssh/</span><em class="tag-deny">BLOCKED</em></div>
+                <!-- Conversation Stream (ChatView.tsx L984) -->
+                <div class="chat-feed">
+                  <div class="msg-row">
+                    <div class="msg-avatar user">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                      </svg>
+                    </div>
+                    <div class="msg-body">
+                      <div class="msg-meta"><strong>You</strong> <small>10:41 PM</small></div>
+                      <div class="msg-bubble user">Harden <code>atomic-writer.ts</code> and verify SHA-256 baseline before commit.</div>
+                    </div>
+                  </div>
+
+                  <div class="msg-row">
+                    <div class="msg-avatar agent">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/>
+                      </svg>
+                    </div>
+                    <div class="msg-body">
+                      <div class="msg-meta">
+                        <strong>AI Agent</strong>
+                        <small>10:41 PM</small>
+                        <span class="msg-model-tag">gemini-2.5-flash</span>
+                      </div>
+                      <div class="msg-bubble agent">
+                        <div class="diff-card">
+                          <div class="diff-card-head">
+                            <code>src/main/changes/atomic-writer.ts</code>
+                            <span class="diff-stats"><em class="add">+4</em> <em class="del">-1</em></span>
+                          </div>
+                          <pre class="diff-code"><code><span class="diff-hunk">@@ -42,4 +42,7 @@ commitFile(req)</span>
+<span class="diff-del">-  await fs.writeFile(path, next)</span>
+<span class="diff-add">+  const base = await sha256(path)</span>
+<span class="diff-add">+  if (base !== hash) throw Conflict()</span>
+<span class="diff-add">+  await writeTempAndFsync(tmp, next)</span>
+<span class="diff-add">+  await fs.rename(tmp, path)</span></code></pre>
+                          <div class="diff-card-actions" id="diffActionRow">
+                            <button type="button" class="mini-btn mini-btn-primary" id="acceptDiffBtn">Accept Changes</button>
+                            <button type="button" class="mini-btn mini-btn-ghost" id="rejectDiffBtn">Reject</button>
+                            <span class="diff-status-note" id="diffStatusNote">SHA-256 baseline armed</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <!-- Subpanel: Activity Log -->
-                <div class="inspector-panel" data-inspector-pane="activity">
-                  <div class="activity-list">
-                    <div class="activity-row">
-                      <span class="activity-badge ok">REALPATH</span>
-                      <div><strong>Canonicalized target path</strong><small>Symlink escape guard passed · 4ms</small></div>
+                <!-- Bottom Anchored PromptComposer (PromptComposer.tsx L323) -->
+                <div class="composer-shell">
+                  <div class="composer-box">
+                    <div class="prompt-box" id="composerPromptText">Ask AI Agent to modify code, run tests, or @ mention files...<span class="prompt-cursor" aria-hidden="true"></span></div>
+                    <div class="prompt-footer">
+                      <div class="composer-left-tools">
+                        <button type="button" class="tool-icon-btn pill-chip" data-prompt="Route failed 429 requests from Gemini to Groq before byte 0" title="Load failover prompt">
+                          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                          </svg>
+                        </button>
+                        <button type="button" class="tool-icon-btn pill-chip" data-prompt="Run vitest security suite in sandboxed AgentCommandRunner" title="Load test runner prompt">
+                          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+                          </svg>
+                        </button>
+                        <button type="button" class="model-chip-btn" id="modelChipBtn" title="Switch Model &amp; Auto-Switch">
+                          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                          </svg>
+                          <span>AI Agent (Auto-Switch)</span>
+                          <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                        </button>
+                      </div>
+                      <button type="button" class="run-button" id="runPreviewBtn">
+                        <span>Send</span>
+                        <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>
+                      </button>
                     </div>
-                    <div class="activity-row">
-                      <span class="activity-badge info">DIFF</span>
-                      <div><strong>Computed unified patch hunk</strong><small>Zero direct writes prior to review · 11ms</small></div>
-                    </div>
-                    <div class="activity-row">
-                      <span class="activity-badge warn">RUNNER</span>
-                      <div><strong>Tests queued in AgentCommandRunner</strong><small>Args array · 1 MB cap · tree-kill armed</small></div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Composer -->
-                <div class="agent-panel">
-                  <div class="prompt-box" id="composerPromptText">Harden atomic file writes and verify pre-commit SHA-256 conflicts<span class="prompt-cursor" aria-hidden="true"></span></div>
-                  <div class="prompt-footer">
-                    <div class="prompt-pills">
-                      <button type="button" class="pill-chip" data-prompt="Route failed 429 requests from Gemini to Groq before byte 0">Failover</button>
-                      <button type="button" class="pill-chip" data-prompt="Run vitest security suite in sandboxed AgentCommandRunner">Run tests</button>
-                    </div>
-                    <button type="button" class="run-button" id="runPreviewBtn">Run check</button>
                   </div>
                 </div>
               </div>
 
               <!-- VIEW 2: AI PROVIDERS + FAILOVER SIMULATOR -->
-              <div class="preview-pane" data-pane="providers">
+              <div class="preview-pane preview-pane-padded" data-pane="providers">
                 <div class="app-heading">
                   <div>
-                    <span class="crumb">GATEWAY / ROUTING</span>
-                    <h3>Dynamic Fallback</h3>
+                    <span class="crumb">AI PROVIDERS / DYNAMIC FALLBACK</span>
+                    <h3>Connected Endpoints</h3>
                   </div>
                   <button type="button" class="mini-btn mini-btn-warn" id="simulateFailoverBtn">Simulate 429 Failover</button>
                 </div>
@@ -411,11 +463,11 @@
               </div>
 
               <!-- VIEW 3: PERMISSION BROKER + TOCTOU GUARD -->
-              <div class="preview-pane" data-pane="permissions">
+              <div class="preview-pane preview-pane-padded" data-pane="permissions">
                 <div class="app-heading">
                   <div>
                     <span class="crumb">PERMISSION BROKER / TOCTOU</span>
-                    <h3>Tool Approval Guard</h3>
+                    <h3>Tool Approval Modal</h3>
                   </div>
                   <span class="risk-pill">HIGH RISK</span>
                 </div>
@@ -445,11 +497,11 @@
               </div>
 
               <!-- VIEW 4: USAGE & QUOTAS -->
-              <div class="preview-pane" data-pane="quotas">
+              <div class="preview-pane preview-pane-padded" data-pane="quotas">
                 <div class="app-heading">
                   <div>
-                    <span class="crumb">OBSERVABILITY / SQLITE WAL</span>
-                    <h3>Usage &amp; Context Floor</h3>
+                    <span class="crumb">USAGE &amp; QUOTAS / SQLITE WAL</span>
+                    <h3>Rate Limits &amp; Context Floor</h3>
                   </div>
                   <span class="tiny-pill">AUTO-SUMMARIZE: ON</span>
                 </div>
@@ -471,6 +523,52 @@
                 </div>
               </div>
             </div>
+
+            <!-- Right Inspector Panel (InspectorPanel.tsx, visible in Chat view) -->
+            <aside class="app-inspector" id="appInspector" aria-label="Workspace Files Panel">
+              <div class="inspector-head">
+                <div class="inspector-title">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                  <span>Workspace Files</span>
+                </div>
+                <button type="button" class="ins-close-btn" id="closeInspectorBtn" title="Collapse Panel" aria-label="Collapse Workspace Files">
+                  <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="inspector-body">
+                <div class="ins-crumb">versarail-core</div>
+                <input type="text" class="ins-filter" id="inspectorFilterInput" placeholder="Filter files..." aria-label="Filter workspace files">
+                <div class="ins-tree" id="inspectorTree">
+                  <div class="ins-item ins-dir" data-name="src">
+                    <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+                    <span>src</span>
+                  </div>
+                  <div class="ins-item ins-dir" data-name="tests">
+                    <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+                    <span>tests</span>
+                  </div>
+                  <button type="button" class="ins-item ins-file" data-name="atomic-writer.ts">
+                    <span class="ins-dot-code">ts</span>
+                    <span>atomic-writer.ts</span>
+                    <em class="ins-copy">M</em>
+                  </button>
+                  <button type="button" class="ins-item ins-file" data-name="permission-broker.ts">
+                    <span class="ins-dot-code">ts</span>
+                    <span>permission-broker.ts</span>
+                    <em class="ins-copy">Copy</em>
+                  </button>
+                  <button type="button" class="ins-item ins-file" data-name="failover-engine.ts">
+                    <span class="ins-dot-code">ts</span>
+                    <span>failover-engine.ts</span>
+                    <em class="ins-copy">Copy</em>
+                  </button>
+                </div>
+              </div>
+            </aside>
           </div>
         </div>
       </div>

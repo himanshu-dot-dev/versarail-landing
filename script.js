@@ -167,18 +167,43 @@
     });
   });
 
-  // Interactive Preview: Sidebar View Switcher
+  // Interactive Preview: Sidebar View Switcher & Electron Shell Layout
+  const appLayout = document.getElementById('appLayout');
+  const appInspector = document.getElementById('appInspector');
+  const toggleInspectorBtn = document.getElementById('toggleInspectorBtn');
+  const closeInspectorBtn = document.getElementById('closeInspectorBtn');
   const sideItems = document.querySelectorAll('.app-sidebar .side-item');
   const previewPanes = document.querySelectorAll('.preview-pane');
 
+  let currentView = 'chat';
+  let isInspectorOpen = appLayout ? appLayout.classList.contains('inspector-open') : true;
+
+  function syncInspectorVisibility() {
+    const shouldShow = currentView === 'chat' && isInspectorOpen;
+    if (appLayout) {
+      appLayout.classList.toggle('inspector-open', shouldShow);
+    }
+    if (appInspector) {
+      appInspector.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+    }
+    if (toggleInspectorBtn) {
+      toggleInspectorBtn.classList.toggle('ctx-btn-active', isInspectorOpen);
+      toggleInspectorBtn.setAttribute('aria-pressed', isInspectorOpen ? 'true' : 'false');
+    }
+  }
+
   function activatePreviewView(viewName) {
+    currentView = viewName;
     sideItems.forEach((btn) => {
       btn.classList.toggle('active', btn.dataset.view === viewName);
     });
     previewPanes.forEach((pane) => {
       pane.classList.toggle('active', pane.dataset.pane === viewName);
     });
+    syncInspectorVisibility();
   }
+
+  syncInspectorVisibility();
 
   sideItems.forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -186,21 +211,66 @@
     });
   });
 
-  // Interactive Preview: Inspector Tabs (Diff / Files / Activity)
-  const insTabs = document.querySelectorAll('.ins-tab');
-  const insPanels = document.querySelectorAll('.inspector-panel');
+  if (toggleInspectorBtn) {
+    toggleInspectorBtn.addEventListener('click', () => {
+      isInspectorOpen = !isInspectorOpen;
+      if (currentView !== 'chat' && isInspectorOpen) {
+        activatePreviewView('chat');
+      } else {
+        syncInspectorVisibility();
+      }
+      announce(isInspectorOpen ? 'Workspace files panel opened.' : 'Workspace files panel collapsed.');
+    });
+  }
 
-  insTabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      const target = tab.dataset.inspector;
-      insTabs.forEach((t) => {
-        const active = t === tab;
-        t.classList.toggle('active', active);
-        t.setAttribute('aria-selected', active ? 'true' : 'false');
+  if (closeInspectorBtn) {
+    closeInspectorBtn.addEventListener('click', () => {
+      isInspectorOpen = false;
+      syncInspectorVisibility();
+      announce('Workspace files panel collapsed.');
+    });
+  }
+
+  const openConfigViewBtn = document.getElementById('openConfigViewBtn');
+  const modelChipBtn = document.getElementById('modelChipBtn');
+  const sidebarSettingsBtn = document.getElementById('sidebarSettingsBtn');
+
+  if (openConfigViewBtn) {
+    openConfigViewBtn.addEventListener('click', () => {
+      activatePreviewView('providers');
+    });
+  }
+
+  if (modelChipBtn) {
+    modelChipBtn.addEventListener('click', () => {
+      activatePreviewView('providers');
+    });
+  }
+
+  if (sidebarSettingsBtn) {
+    sidebarSettingsBtn.addEventListener('click', () => {
+      activatePreviewView('permissions');
+    });
+  }
+
+  // Interactive Preview: Recent Chats Switcher
+  const recentChatItems = document.querySelectorAll('.recent-chat-item');
+  const chatContextTitle = document.getElementById('chatContextTitle');
+  const initialChatTitle = chatContextTitle ? chatContextTitle.textContent : 'Atomic write & hash guard';
+
+  recentChatItems.forEach((item) => {
+    item.addEventListener('click', () => {
+      recentChatItems.forEach((other) => {
+        other.classList.toggle('active', other === item);
       });
-      insPanels.forEach((panel) => {
-        panel.classList.toggle('active', panel.dataset.inspectorPane === target);
-      });
+      const topic = item.dataset.chatTopic || 'atomic';
+      if (topic === 'failover') {
+        if (chatContextTitle) chatContextTitle.textContent = item.textContent.trim();
+        activatePreviewView('providers');
+      } else {
+        if (chatContextTitle) chatContextTitle.textContent = initialChatTitle;
+        activatePreviewView('chat');
+      }
     });
   });
 
@@ -208,20 +278,86 @@
   const acceptDiffBtn = document.getElementById('acceptDiffBtn');
   const rejectDiffBtn = document.getElementById('rejectDiffBtn');
   const diffStatusNote = document.getElementById('diffStatusNote');
+  const initialDiffStatusText = diffStatusNote ? diffStatusNote.textContent : '';
+  const initialDiffStatusClass = diffStatusNote ? diffStatusNote.className : 'diff-status-note';
 
   if (acceptDiffBtn && rejectDiffBtn && diffStatusNote) {
     acceptDiffBtn.addEventListener('click', () => {
-      diffStatusNote.textContent = 'Committed atomically (temp + fsync + rename)';
+      diffStatusNote.textContent = 'Committed atomically (fsync)';
       diffStatusNote.className = 'diff-status-note status-ok';
       announce('Demo diff accepted atomically.');
     });
 
     rejectDiffBtn.addEventListener('click', () => {
-      diffStatusNote.textContent = 'Patch discarded — 0 bytes written to disk';
+      diffStatusNote.textContent = 'Discarded — 0 bytes written';
       diffStatusNote.className = 'diff-status-note status-err';
       announce('Demo diff rejected; zero bytes written.');
     });
   }
+
+  // Interactive Preview: TitleBar Reload simulation
+  const previewReloadBtn = document.getElementById('previewReloadBtn');
+  let reloadTimer = null;
+
+  if (previewReloadBtn) {
+    previewReloadBtn.addEventListener('click', () => {
+      const icon = previewReloadBtn.querySelector('svg') || previewReloadBtn;
+      icon.classList.add('spinning');
+      clearTimeout(reloadTimer);
+      reloadTimer = setTimeout(() => {
+        icon.classList.remove('spinning');
+      }, 450);
+
+      if (diffStatusNote) {
+        diffStatusNote.textContent = initialDiffStatusText || 'Baseline SHA-256 verified · Ready for review';
+        diffStatusNote.className = initialDiffStatusClass;
+      }
+      if (chatContextTitle) {
+        chatContextTitle.textContent = initialChatTitle;
+      }
+      recentChatItems.forEach((item) => {
+        item.classList.toggle('active', item.dataset.chatTopic === 'atomic');
+      });
+      activatePreviewView('chat');
+      announce('Preview state refreshed.');
+    });
+  }
+
+  // Interactive Preview: Workspace Files Filter & Click-to-Copy
+  const inspectorFilterInput = document.getElementById('inspectorFilterInput');
+  const inspectorItems = document.querySelectorAll('#inspectorTree .ins-item');
+
+  if (inspectorFilterInput && inspectorItems.length) {
+    inspectorFilterInput.addEventListener('input', () => {
+      const query = inspectorFilterInput.value.trim().toLowerCase();
+      inspectorItems.forEach((row) => {
+        const label = (row.dataset.name || row.textContent || '').toLowerCase();
+        row.style.display = query === '' || label.includes(query) ? '' : 'none';
+      });
+    });
+  }
+
+  document.querySelectorAll('#inspectorTree .ins-file').forEach((fileBtn) => {
+    let copyTimer = null;
+    fileBtn.addEventListener('click', () => {
+      const copyEl = fileBtn.querySelector('.ins-copy');
+      fileBtn.classList.add('copied');
+      if (copyEl) {
+        if (!fileBtn.dataset.defaultCopy) {
+          fileBtn.dataset.defaultCopy = copyEl.textContent;
+        }
+        copyEl.textContent = 'Copied!';
+      }
+      clearTimeout(copyTimer);
+      copyTimer = setTimeout(() => {
+        fileBtn.classList.remove('copied');
+        if (copyEl && fileBtn.dataset.defaultCopy) {
+          copyEl.textContent = fileBtn.dataset.defaultCopy;
+        }
+      }, 1200);
+      announce(`Copied ${fileBtn.dataset.name || 'file'} path.`);
+    });
+  });
 
   // Interactive Preview: Prompt Pills & Run Button
   const composerPromptText = document.getElementById('composerPromptText');
@@ -275,7 +411,10 @@
         pvGroq.classList.add('active');
         pvGroqState.textContent = 'Active Failover';
         pvGroqState.className = 'pv-state ok';
-        if (healthText) healthText.textContent = 'GROQ LLAMA 3.3 70B · FAILOVER';
+        if (healthText) {
+          healthText.textContent = 'Failover: Groq';
+          healthText.classList.add('is-failover');
+        }
         simFailoverBtn.textContent = 'Restore Primary';
         announce('Simulated pre-first-byte 429 failover to GroqCloud.');
       } else {
@@ -290,7 +429,10 @@
         pvGroq.classList.remove('active');
         pvGroqState.textContent = 'Standby';
         pvGroqState.className = 'pv-state';
-        if (healthText) healthText.textContent = 'GEMINI 2.5 FLASH · 184MS';
+        if (healthText) {
+          healthText.textContent = 'Ready';
+          healthText.classList.remove('is-failover');
+        }
         simFailoverBtn.textContent = 'Simulate 429 Failover';
         announce('Restored primary provider Gemini.');
       }
