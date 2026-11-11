@@ -28,6 +28,42 @@
     if (el) el.textContent = msg;
   }
 
+  // Theme Toggle (Dark / Light mode matching versarail-ai theme tokens)
+  const themeToggleBtn = document.getElementById('themeToggle');
+  const themeColorMeta = document.getElementById('themeColorMeta');
+
+  function applyTheme(theme, persist = false) {
+    const next = theme === 'light' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    if (themeColorMeta) {
+      themeColorMeta.setAttribute('content', next === 'light' ? '#f8fafc' : '#090a0f');
+    }
+    if (themeToggleBtn) {
+      const isLight = next === 'light';
+      themeToggleBtn.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+      themeToggleBtn.setAttribute(
+        'aria-label',
+        isLight ? 'Switch to dark mode' : 'Switch to light mode'
+      );
+    }
+    if (persist) {
+      try {
+        localStorage.setItem('versarail-theme', next);
+      } catch {}
+    }
+  }
+
+  applyTheme(document.documentElement.dataset.theme || 'dark', false);
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      const current = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+      const next = current === 'light' ? 'dark' : 'light';
+      applyTheme(next, true);
+      announce(`Switched to ${next} mode.`);
+    });
+  }
+
   // Dynamic footer year
   const yearEl = document.getElementById('year');
   if (yearEl) {
@@ -176,13 +212,13 @@
   if (acceptDiffBtn && rejectDiffBtn && diffStatusNote) {
     acceptDiffBtn.addEventListener('click', () => {
       diffStatusNote.textContent = 'Committed atomically (temp + fsync + rename)';
-      diffStatusNote.style.color = '#34d399';
+      diffStatusNote.className = 'diff-status-note status-ok';
       announce('Demo diff accepted atomically.');
     });
 
     rejectDiffBtn.addEventListener('click', () => {
       diffStatusNote.textContent = 'Patch discarded — 0 bytes written to disk';
-      diffStatusNote.style.color = '#f87171';
+      diffStatusNote.className = 'diff-status-note status-err';
       announce('Demo diff rejected; zero bytes written.');
     });
   }
@@ -208,7 +244,7 @@
         activatePreviewView('permissions');
       } else if (diffStatusNote) {
         diffStatusNote.textContent = 'Baseline SHA-256 verified · Ready for review';
-        diffStatusNote.style.color = '#38bdf8';
+        diffStatusNote.className = 'diff-status-note status-info';
       }
     });
   }

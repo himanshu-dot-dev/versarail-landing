@@ -1,9 +1,20 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090a0f">
+  <meta name="theme-color" content="#090a0f" id="themeColorMeta">
+  <script>
+    (() => {
+      try {
+        const saved = localStorage.getItem('versarail-theme');
+        const theme = saved === 'light' || saved === 'dark' ? saved : 'dark';
+        document.documentElement.dataset.theme = theme;
+        const meta = document.getElementById('themeColorMeta');
+        if (meta) meta.setAttribute('content', theme === 'light' ? '#f8fafc' : '#090a0f');
+      } catch {}
+    })();
+  </script>
   <title>VersaRail AI — Local-First Multi-Provider AI Agent Workstation</title>
   <meta name="description" content="A local-first desktop AI agent workstation with BYOK multi-provider failover, diff-first atomic file edits, TOCTOU-hardened permissions, and OS keychain security.">
   <meta name="author" content="VersaRail AI">
@@ -75,25 +86,6 @@
       <span class="brand-wordmark">VersaRail <span class="brand-accent">AI</span></span>
     </a>
 
-    <button
-      type="button"
-      class="mobile-menu"
-      id="mobileMenu"
-      aria-label="Toggle navigation menu"
-      aria-expanded="false"
-      aria-controls="navLinks"
-    >
-      <svg class="icon-menu" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-        <line x1="4" y1="7" x2="20" y2="7"/>
-        <line x1="4" y1="12" x2="20" y2="12"/>
-        <line x1="4" y1="17" x2="20" y2="17"/>
-      </svg>
-      <svg class="icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-        <line x1="6" y1="6" x2="18" y2="18"/>
-        <line x1="6" y1="18" x2="18" y2="6"/>
-      </svg>
-    </button>
-
     <nav class="nav-links" id="navLinks" aria-label="Primary navigation">
       <a href="#features">Capabilities</a>
       <a href="#providers">Providers</a>
@@ -108,12 +100,50 @@
       </a>
     </nav>
 
-    <a class="button button-small button-outline header-download" href="#download">
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/>
-      </svg>
-      <span>Get Desktop App</span>
-    </a>
+    <div class="header-actions">
+      <button
+        type="button"
+        class="theme-toggle"
+        id="themeToggle"
+        aria-label="Switch to light mode"
+        aria-pressed="false"
+        title="Toggle light or dark mode"
+      >
+        <svg class="icon-sun" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+        </svg>
+      </button>
+
+      <a class="button button-small button-outline header-download" href="#download">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/>
+        </svg>
+        <span>Get Desktop App</span>
+      </a>
+
+      <button
+        type="button"
+        class="mobile-menu"
+        id="mobileMenu"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+        aria-controls="navLinks"
+      >
+        <svg class="icon-menu" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <line x1="4" y1="7" x2="20" y2="7"/>
+          <line x1="4" y1="12" x2="20" y2="12"/>
+          <line x1="4" y1="17" x2="20" y2="17"/>
+        </svg>
+        <svg class="icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <line x1="6" y1="6" x2="18" y2="18"/>
+          <line x1="6" y1="18" x2="18" y2="6"/>
+        </svg>
+      </button>
+    </div>
   </header>
 
   <main>
@@ -358,7 +388,7 @@
                     <span class="pv-state ok" id="pvGeminiState">Primary</span>
                   </div>
                   <div class="provider-mini-card" id="pvGroq">
-                    <img src="/assets/providers/groq.svg" alt="Groq" width="16" height="16">
+                    <img class="mono-provider" src="/assets/providers/groq.svg" alt="Groq" width="16" height="16">
                     <div>
                       <strong>GroqCloud</strong>
                       <small id="pvGroqSub">llama-3.3-70b · ••••k418</small>
@@ -374,7 +404,7 @@
                     <span class="pv-state">Healthy</span>
                   </div>
                   <div class="provider-mini-card">
-                    <img src="/assets/providers/ollama.svg" alt="Ollama" width="16" height="16">
+                    <img class="mono-provider" src="/assets/providers/ollama.svg" alt="Ollama" width="16" height="16">
                     <div>
                       <strong>Ollama Local</strong>
                       <small>127.0.0.1:11434 · offline</small>
@@ -477,21 +507,21 @@
 
       <div class="provider-grid" role="list" aria-label="Supported AI providers">
         <div class="provider-tile" role="listitem"><img src="/assets/providers/gemini.svg" alt="" width="22" height="22"><span>Google Gemini</span></div>
-        <div class="provider-tile" role="listitem"><img src="/assets/providers/groq.svg" alt="" width="22" height="22"><span>GroqCloud</span></div>
+        <div class="provider-tile" role="listitem"><img class="mono-provider" src="/assets/providers/groq.svg" alt="" width="22" height="22"><span>GroqCloud</span></div>
         <div class="provider-tile" role="listitem"><img src="/assets/providers/cerebras.svg" alt="" width="22" height="22"><span>Cerebras</span></div>
         <div class="provider-tile" role="listitem"><img src="/assets/providers/openrouter.svg" alt="" width="22" height="22"><span>OpenRouter</span></div>
-        <div class="provider-tile" role="listitem"><img src="/assets/providers/openai.svg" alt="" width="22" height="22"><span>OpenAI</span></div>
+        <div class="provider-tile" role="listitem"><img class="mono-provider" src="/assets/providers/openai.svg" alt="" width="22" height="22"><span>OpenAI</span></div>
         <div class="provider-tile" role="listitem"><img src="/assets/providers/deepseek.svg" alt="" width="22" height="22"><span>DeepSeek</span></div>
         <div class="provider-tile" role="listitem"><img src="/assets/providers/mistral.svg" alt="" width="22" height="22"><span>Mistral AI</span></div>
         <div class="provider-tile" role="listitem"><img src="/assets/providers/cloudflare.svg" alt="" width="22" height="22"><span>Cloudflare AI</span></div>
         <div class="provider-tile" role="listitem"><img src="/assets/providers/nvidia.svg" alt="" width="22" height="22"><span>NVIDIA NIM</span></div>
         <div class="provider-tile" role="listitem"><img src="/assets/providers/cohere.svg" alt="" width="22" height="22"><span>Cohere</span></div>
         <div class="provider-tile" role="listitem"><img src="/assets/providers/huggingface.svg" alt="" width="22" height="22"><span>Hugging Face</span></div>
-        <div class="provider-tile" role="listitem"><img src="/assets/providers/ollama.svg" alt="" width="22" height="22"><span>Ollama Local</span></div>
-        <div class="provider-tile" role="listitem"><img src="/assets/providers/kilo.svg" alt="" width="22" height="22"><span>Kilo Gateway</span></div>
-        <div class="provider-tile" role="listitem"><img src="/assets/providers/pollinations.svg" alt="" width="22" height="22"><span>Pollinations</span></div>
-        <div class="provider-tile" role="listitem"><img src="/assets/providers/openai-compatible.svg" alt="" width="22" height="22"><span>OpenAI-Compatible</span></div>
-        <div class="provider-tile" role="listitem"><img src="/assets/providers/custom.svg" alt="" width="22" height="22"><span>Custom Endpoints</span></div>
+        <div class="provider-tile" role="listitem"><img class="mono-provider" src="/assets/providers/ollama.svg" alt="" width="22" height="22"><span>Ollama Local</span></div>
+        <div class="provider-tile" role="listitem"><img class="mono-provider" src="/assets/providers/kilo.svg" alt="" width="22" height="22"><span>Kilo Gateway</span></div>
+        <div class="provider-tile" role="listitem"><img class="mono-provider" src="/assets/providers/pollinations.svg" alt="" width="22" height="22"><span>Pollinations</span></div>
+        <div class="provider-tile" role="listitem"><img class="mono-provider" src="/assets/providers/openai-compatible.svg" alt="" width="22" height="22"><span>OpenAI-Compatible</span></div>
+        <div class="provider-tile" role="listitem"><img class="mono-provider" src="/assets/providers/custom.svg" alt="" width="22" height="22"><span>Custom Endpoints</span></div>
       </div>
 
       <div class="failover-callout">
