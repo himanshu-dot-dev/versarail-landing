@@ -370,6 +370,7 @@ button {
 .app-window-wrap {
   position: relative;
   min-width: 0;
+  perspective: 1200px;
 }
 
 .window-glow {
@@ -426,7 +427,21 @@ button {
   border: 1px solid var(--line-strong);
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 32px 84px rgba(0, 0, 0, 0.65);
+  box-shadow:
+    0 38px 96px rgba(0, 0, 0, 0.72),
+    14px 18px 42px rgba(79, 70, 229, 0.09);
+  transform: rotateY(-5.5deg) rotateX(2.5deg);
+  transform-origin: center center;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.25s ease;
+}
+
+.app-window:hover,
+.app-window:focus-within {
+  transform: rotateY(-2deg) rotateX(1deg);
+  border-color: rgba(129, 140, 248, 0.35);
+  box-shadow:
+    0 42px 104px rgba(0, 0, 0, 0.78),
+    8px 14px 36px rgba(79, 70, 229, 0.14);
 }
 
 .window-top {
@@ -1917,6 +1932,11 @@ button {
   .app-window-wrap {
     max-width: 680px;
     width: 100%;
+    margin-inline: auto;
+  }
+
+  .app-window {
+    transform: rotateY(-2.5deg) rotateX(1.5deg);
   }
 
   .feature-wide {
@@ -2031,5 +2051,131 @@ button {
 
   .window-brand-pill small {
     display: none;
+  }
+
+  .app-window,
+  .app-window:hover,
+  .app-window:focus-within {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-window {
+    transition: none;
+  }
+}
+
+/* Custom Theme Circle Cursor (fine mouse pointers with motion allowed) */
+.cursor-layer {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .cursor-layer {
+    display: block;
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .cursor-layer.is-visible {
+    opacity: 1;
+  }
+
+  body.has-custom-cursor,
+  body.has-custom-cursor a,
+  body.has-custom-cursor button,
+  body.has-custom-cursor [role="tab"],
+  body.has-custom-cursor [role="button"],
+  body.has-custom-cursor .provider-tile {
+    cursor: none;
+  }
+
+  .cursor-ring,
+  .cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  .cursor-ring {
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    border: 1.5px solid rgba(56, 189, 248, 0.58);
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(56, 189, 248, 0.03) 70%, transparent 100%);
+    box-shadow:
+      0 0 18px rgba(56, 189, 248, 0.2),
+      inset 0 0 10px rgba(99, 102, 241, 0.12);
+    transition:
+      width 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+      height 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+      margin 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.2s ease,
+      background 0.2s ease,
+      box-shadow 0.2s ease,
+      opacity 0.2s ease;
+  }
+
+  .cursor-dot {
+    width: 7px;
+    height: 7px;
+    margin: -3.5px 0 0 -3.5px;
+    background: linear-gradient(135deg, var(--indigo-soft), var(--tertiary));
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.85);
+    transition:
+      width 0.16s ease,
+      height 0.16s ease,
+      margin 0.16s ease,
+      background 0.16s ease,
+      box-shadow 0.16s ease;
+  }
+
+  .cursor-layer.is-hovering .cursor-ring {
+    width: 48px;
+    height: 48px;
+    margin: -24px 0 0 -24px;
+    border-color: rgba(129, 140, 248, 0.88);
+    background: radial-gradient(circle, rgba(79, 70, 229, 0.18) 0%, rgba(56, 189, 248, 0.08) 72%, transparent 100%);
+    box-shadow:
+      0 0 24px rgba(99, 102, 241, 0.36),
+      inset 0 0 14px rgba(56, 189, 248, 0.16);
+  }
+
+  .cursor-layer.is-hovering .cursor-dot {
+    width: 5px;
+    height: 5px;
+    margin: -2.5px 0 0 -2.5px;
+    background: var(--tertiary);
+  }
+
+  .cursor-layer.is-text .cursor-ring {
+    width: 24px;
+    height: 24px;
+    margin: -12px 0 0 -12px;
+    border-color: rgba(56, 189, 248, 0.35);
+    opacity: 0.55;
+  }
+
+  .cursor-layer.is-pressed .cursor-ring {
+    width: 28px;
+    height: 28px;
+    margin: -14px 0 0 -14px;
+    border-color: var(--tertiary);
+    background: rgba(56, 189, 248, 0.18);
+  }
+
+  .cursor-layer.is-pressed .cursor-dot {
+    width: 9px;
+    height: 9px;
+    margin: -4.5px 0 0 -4.5px;
   }
 }

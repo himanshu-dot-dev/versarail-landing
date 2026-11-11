@@ -299,5 +299,99 @@
         'Execution blocked until explicit user decision matches approved SHA-256 hash.';
     });
   }
+
+  // Theme-aligned Circle Cursor (desktop fine pointers only, zero idle rAF overhead)
+  const cursorLayer = document.getElementById('cursorLayer');
+  const cursorRing = document.getElementById('cursorRing');
+  const cursorDot = document.getElementById('cursorDot');
+  const supportsFinePointer =
+    window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (cursorLayer && cursorRing && cursorDot && supportsFinePointer) {
+    let targetX = -100;
+    let targetY = -100;
+    let ringX = -100;
+    let ringY = -100;
+    let rafId = null;
+    let hasMoved = false;
+
+    const interactiveSelector =
+      'a, button, [role="tab"], [role="button"], .provider-tile, .feature-card, .sec-card';
+    const textSelector = 'code, pre, input, textarea';
+
+    function renderCursor() {
+      const dx = targetX - ringX;
+      const dy = targetY - ringY;
+      ringX += dx * 0.22;
+      ringY += dy * 0.22;
+      cursorRing.style.transform = `translate3d(${ringX.toFixed(2)}px, ${ringY.toFixed(2)}px, 0)`;
+
+      if (Math.abs(dx) > 0.15 || Math.abs(dy) > 0.15) {
+        rafId = requestAnimationFrame(renderCursor);
+      } else {
+        ringX = targetX;
+        ringY = targetY;
+        cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+        rafId = null;
+      }
+    }
+
+    function updateStateFromTarget(el) {
+      if (!(el instanceof Element)) return;
+      const isInteractive = Boolean(el.closest(interactiveSelector));
+      const isText = !isInteractive && Boolean(el.closest(textSelector));
+      cursorLayer.classList.toggle('is-hovering', isInteractive);
+      cursorLayer.classList.toggle('is-text', isText);
+    }
+
+    document.addEventListener(
+      'pointermove',
+      (e) => {
+        if (e.pointerType && e.pointerType !== 'mouse') {
+          document.body.classList.remove('has-custom-cursor');
+          cursorLayer.classList.remove('is-visible');
+          return;
+        }
+
+        targetX = e.clientX;
+        targetY = e.clientY;
+        cursorDot.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
+
+        if (!hasMoved) {
+          hasMoved = true;
+          ringX = targetX;
+          ringY = targetY;
+          cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+          document.body.classList.add('has-custom-cursor');
+        }
+
+        cursorLayer.classList.add('is-visible');
+        updateStateFromTarget(e.target);
+
+        if (!rafId) {
+          rafId = requestAnimationFrame(renderCursor);
+        }
+      },
+      { passive: true }
+    );
+
+    document.addEventListener('pointerdown', (e) => {
+      if (e.pointerType && e.pointerType !== 'mouse') return;
+      cursorLayer.classList.add('is-pressed');
+    });
+
+    document.addEventListener('pointerup', () => {
+      cursorLayer.classList.remove('is-pressed');
+    });
+
+    document.documentElement.addEventListener('mouseleave', () => {
+      cursorLayer.classList.remove('is-visible', 'is-pressed');
+    });
+
+    window.addEventListener('blur', () => {
+      cursorLayer.classList.remove('is-visible', 'is-pressed');
+    });
+  }
 })();
 
