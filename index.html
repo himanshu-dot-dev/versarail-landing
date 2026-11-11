@@ -47,9 +47,9 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
   <div class="ambient-stage" aria-hidden="true">
-    <div class="ambient ambient-one"></div>
-    <div class="ambient ambient-two"></div>
+    <canvas id="versarail3d"></canvas>
     <div class="grid-overlay"></div>
   </div>
 
@@ -151,10 +151,10 @@
     <section class="hero section-wrap">
       <div class="hero-copy">
         <div class="eyebrow">
-          <span class="pulse" aria-hidden="true"></span>
-          <span>LOCAL-FIRST DESKTOP AGENT WORKSTATION · v0.1.0</span>
+          <span class="eyebrow-tag">v0.1.0</span>
+          <span>DESKTOP AGENT WORKSTATION</span>
         </div>
-        <h1>Run AI agents with<br><span class="gradient-text">zero blind trust.</span></h1>
+        <h1>Run AI agents with<br><span class="gradient-text">verifiable control.</span></h1>
         <p class="hero-lede">
           Bring your own API keys across 14+ providers with automatic pre-first-byte failover.
           Review unified diffs before disk writes, lock tool calls to SHA-256 hashes, and store secrets in your OS hardware keychain.
@@ -199,15 +199,6 @@
 
       <!-- INTERACTIVE DESKTOP APP PREVIEW -->
       <div class="app-window-wrap" aria-label="Interactive VersaRail AI desktop workspace preview">
-        <div class="window-glow" aria-hidden="true"></div>
-
-        <div class="chip-rail chip-rail-top" aria-hidden="true">
-          <span class="float-chip">
-            <span class="chip-dot"></span>
-            <span>Interactive Preview · Click views inside</span>
-          </span>
-        </div>
-
         <div class="app-window" id="appPreview">
           <!-- Custom Frameless Titlebar (40px style) -->
           <div class="window-top">
@@ -224,8 +215,7 @@
             </div>
             <div class="window-top-right">
               <span class="window-status" id="previewHealthBadge">
-                <i aria-hidden="true"></i>
-                <span id="previewHealthText">Gemini 2.5 Flash · Ready</span>
+                <span id="previewHealthText">GEMINI 2.5 FLASH · 184MS</span>
               </span>
             </div>
           </div>
@@ -299,8 +289,14 @@
                 <!-- Subpanel: Diff Viewer -->
                 <div class="inspector-panel active" data-inspector-pane="diff">
                   <div class="timeline-compact">
-                    <span class="tl-done"><i></i> Baseline SHA-256 verified (18ms)</span>
-                    <span class="tl-done"><i></i> Unified patch generated</span>
+                    <span class="tl-done">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                      <span>Baseline SHA-256 verified (18ms)</span>
+                    </span>
+                    <span class="tl-done">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                      <span>Unified patch staged</span>
+                    </span>
                   </div>
 
                   <div class="diff-card">
@@ -455,7 +451,7 @@
                     <span class="crumb">OBSERVABILITY / SQLITE WAL</span>
                     <h3>Usage &amp; Context Floor</h3>
                   </div>
-                  <span class="tiny-pill"><i aria-hidden="true"></i> Auto-summarize ON</span>
+                  <span class="tiny-pill">AUTO-SUMMARIZE: ON</span>
                 </div>
 
                 <div class="quota-cards">
@@ -477,20 +473,11 @@
             </div>
           </div>
         </div>
-
-        <div class="chip-rail chip-rail-bottom" aria-hidden="true">
-          <span class="float-chip">
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
-            </svg>
-            <span>SHA-256 TOCTOU Permission Guard</span>
-          </span>
-        </div>
       </div>
     </section>
 
     <!-- TRUST STRIP -->
-    <section class="trust-strip section-wrap" aria-label="Core pillars">
+    <section class="trust-strip section-wrap" aria-label="Core pillars" data-reveal>
       <span>ENGINEERED FOR DEVELOPERS WHO AUDIT BEFORE COMMITTING</span>
       <div><b>01</b> Keys locked in OS hardware keychain</div>
       <div><b>02</b> Transparent pre-first-byte failover</div>
@@ -499,32 +486,32 @@
 
     <!-- PROVIDER ECOSYSTEM -->
     <section class="providers-section section-wrap" id="providers">
-      <div class="section-heading">
-        <div class="eyebrow">MULTI-PROVIDER BYOK ENGINE</div>
-        <h2>Bring every model.<br><span class="muted-gradient">Fail over without losing a turn.</span></h2>
+      <div class="section-heading" data-reveal>
+        <div class="eyebrow"><span class="eyebrow-tag">01</span><span>MULTI-PROVIDER BYOK ENGINE</span></div>
+        <h2>Bring every model. Fail over without losing a turn.</h2>
         <p>Connect cloud APIs, fast inference gateways, or local Ollama models directly from your machine—no intermediary markup or account lock-in. When a provider returns <code>429</code>, <code>503</code>, or times out before byte 0, VersaRail routes to a healthy fallback automatically.</p>
       </div>
 
-      <div class="provider-grid" role="list" aria-label="Supported AI providers">
-        <div class="provider-tile" role="listitem"><img src="/assets/providers/gemini.svg" alt="" width="22" height="22"><span>Google Gemini</span></div>
-        <div class="provider-tile" role="listitem"><img class="mono-provider" src="/assets/providers/groq.svg" alt="" width="22" height="22"><span>GroqCloud</span></div>
-        <div class="provider-tile" role="listitem"><img src="/assets/providers/cerebras.svg" alt="" width="22" height="22"><span>Cerebras</span></div>
-        <div class="provider-tile" role="listitem"><img src="/assets/providers/openrouter.svg" alt="" width="22" height="22"><span>OpenRouter</span></div>
-        <div class="provider-tile" role="listitem"><img class="mono-provider" src="/assets/providers/openai.svg" alt="" width="22" height="22"><span>OpenAI</span></div>
-        <div class="provider-tile" role="listitem"><img src="/assets/providers/deepseek.svg" alt="" width="22" height="22"><span>DeepSeek</span></div>
-        <div class="provider-tile" role="listitem"><img src="/assets/providers/mistral.svg" alt="" width="22" height="22"><span>Mistral AI</span></div>
-        <div class="provider-tile" role="listitem"><img src="/assets/providers/cloudflare.svg" alt="" width="22" height="22"><span>Cloudflare AI</span></div>
-        <div class="provider-tile" role="listitem"><img src="/assets/providers/nvidia.svg" alt="" width="22" height="22"><span>NVIDIA NIM</span></div>
-        <div class="provider-tile" role="listitem"><img src="/assets/providers/cohere.svg" alt="" width="22" height="22"><span>Cohere</span></div>
-        <div class="provider-tile" role="listitem"><img src="/assets/providers/huggingface.svg" alt="" width="22" height="22"><span>Hugging Face</span></div>
-        <div class="provider-tile" role="listitem"><img class="mono-provider" src="/assets/providers/ollama.svg" alt="" width="22" height="22"><span>Ollama Local</span></div>
-        <div class="provider-tile" role="listitem"><img class="mono-provider" src="/assets/providers/kilo.svg" alt="" width="22" height="22"><span>Kilo Gateway</span></div>
-        <div class="provider-tile" role="listitem"><img class="mono-provider" src="/assets/providers/pollinations.svg" alt="" width="22" height="22"><span>Pollinations</span></div>
-        <div class="provider-tile" role="listitem"><img class="mono-provider" src="/assets/providers/openai-compatible.svg" alt="" width="22" height="22"><span>OpenAI-Compatible</span></div>
-        <div class="provider-tile" role="listitem"><img class="mono-provider" src="/assets/providers/custom.svg" alt="" width="22" height="22"><span>Custom Endpoints</span></div>
+      <div class="provider-grid" role="list" aria-label="Supported AI providers" data-reveal-stagger>
+        <div class="provider-tile" role="listitem" data-reveal><img src="/assets/providers/gemini.svg" alt="" width="22" height="22"><span>Google Gemini</span></div>
+        <div class="provider-tile" role="listitem" data-reveal><img class="mono-provider" src="/assets/providers/groq.svg" alt="" width="22" height="22"><span>GroqCloud</span></div>
+        <div class="provider-tile" role="listitem" data-reveal><img src="/assets/providers/cerebras.svg" alt="" width="22" height="22"><span>Cerebras</span></div>
+        <div class="provider-tile" role="listitem" data-reveal><img src="/assets/providers/openrouter.svg" alt="" width="22" height="22"><span>OpenRouter</span></div>
+        <div class="provider-tile" role="listitem" data-reveal><img class="mono-provider" src="/assets/providers/openai.svg" alt="" width="22" height="22"><span>OpenAI</span></div>
+        <div class="provider-tile" role="listitem" data-reveal><img src="/assets/providers/deepseek.svg" alt="" width="22" height="22"><span>DeepSeek</span></div>
+        <div class="provider-tile" role="listitem" data-reveal><img src="/assets/providers/mistral.svg" alt="" width="22" height="22"><span>Mistral AI</span></div>
+        <div class="provider-tile" role="listitem" data-reveal><img src="/assets/providers/cloudflare.svg" alt="" width="22" height="22"><span>Cloudflare AI</span></div>
+        <div class="provider-tile" role="listitem" data-reveal><img src="/assets/providers/nvidia.svg" alt="" width="22" height="22"><span>NVIDIA NIM</span></div>
+        <div class="provider-tile" role="listitem" data-reveal><img src="/assets/providers/cohere.svg" alt="" width="22" height="22"><span>Cohere</span></div>
+        <div class="provider-tile" role="listitem" data-reveal><img src="/assets/providers/huggingface.svg" alt="" width="22" height="22"><span>Hugging Face</span></div>
+        <div class="provider-tile" role="listitem" data-reveal><img class="mono-provider" src="/assets/providers/ollama.svg" alt="" width="22" height="22"><span>Ollama Local</span></div>
+        <div class="provider-tile" role="listitem" data-reveal><img class="mono-provider" src="/assets/providers/kilo.svg" alt="" width="22" height="22"><span>Kilo Gateway</span></div>
+        <div class="provider-tile" role="listitem" data-reveal><img class="mono-provider" src="/assets/providers/pollinations.svg" alt="" width="22" height="22"><span>Pollinations</span></div>
+        <div class="provider-tile" role="listitem" data-reveal><img class="mono-provider" src="/assets/providers/openai-compatible.svg" alt="" width="22" height="22"><span>OpenAI-Compatible</span></div>
+        <div class="provider-tile" role="listitem" data-reveal><img class="mono-provider" src="/assets/providers/custom.svg" alt="" width="22" height="22"><span>Custom Endpoints</span></div>
       </div>
 
-      <div class="failover-callout">
+      <div class="failover-callout" data-reveal>
         <div class="callout-badge">PRE-FIRST-BYTE VS MID-STREAM</div>
         <p>Silent failover only occurs <strong>before the first token renders</strong>—with live cooldown ETAs and health badges. Once output has started streaming, silent switching is strictly blocked to prevent corrupted mixed-model responses; instead, an interactive notice pill lets you retry cleanly.</p>
       </div>
@@ -532,14 +519,14 @@
 
     <!-- BENTO CAPABILITIES -->
     <section class="features section-wrap" id="features">
-      <div class="section-heading">
-        <div class="eyebrow">ARCHITECTURE &amp; CAPABILITIES</div>
-        <h2>Built for control.<br><span class="muted-gradient">Hardened down to the filesystem.</span></h2>
+      <div class="section-heading" data-reveal>
+        <div class="eyebrow"><span class="eyebrow-tag">02</span><span>ARCHITECTURE &amp; CAPABILITIES</span></div>
+        <h2>Built for control, hardened down to the filesystem.</h2>
         <p>Every subsystem in VersaRail AI is engineered to eliminate silent overwrites, credential leaks, and fragile native C++ builds.</p>
       </div>
 
-      <div class="feature-grid">
-        <article class="feature-card feature-large">
+      <div class="feature-grid" data-reveal-stagger>
+        <article class="feature-card feature-large" data-reveal>
           <div class="feature-icon indigo-bg">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
@@ -552,7 +539,7 @@
           </div>
         </article>
 
-        <article class="feature-card">
+        <article class="feature-card" data-reveal>
           <div class="feature-icon cyan-bg">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
@@ -560,10 +547,14 @@
           </div>
           <h3>TOCTOU-Hardened Permission Broker</h3>
           <p>Every approved tool call binds its exact arguments to a canonical SHA-256 hash. If parameters mutate before execution, <code>ToctouTamperingError</code> aborts the run. Path traversal, symlinks, and <code>.env</code>/<code>.git</code>/<code>.ssh</code> paths are blocked via <code>realpath</code>.</p>
-          <div class="permission-line"><i aria-hidden="true"></i><span>Canonical SHA-256 lock</span><b>ENFORCED</b></div>
+          <div class="permission-line">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>Canonical SHA-256 binding</span>
+            <b>ENFORCED</b>
+          </div>
         </article>
 
-        <article class="feature-card">
+        <article class="feature-card" data-reveal>
           <div class="feature-icon amber-bg">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>
@@ -574,7 +565,7 @@
           <div class="mini-code"><span>args[]</span> <b>→</b> <span>1MB cap + redact</span> <b>→</b> <span>tree-kill</span></div>
         </article>
 
-        <article class="feature-card">
+        <article class="feature-card" data-reveal>
           <div class="feature-icon emerald-bg">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/>
@@ -584,7 +575,7 @@
           <p>Built on Node.js 24's built-in <code>node:sqlite</code> (<code>DatabaseSync</code> in WAL mode) and native <code>fetch</code>—zero <code>node-gyp</code>, MSBuild, or Python compilation headaches across Windows, macOS, and Linux.</p>
         </article>
 
-        <article class="feature-card feature-wide">
+        <article class="feature-card feature-wide" data-reveal>
           <div class="feature-icon violet-bg">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
@@ -595,9 +586,9 @@
             <p>Track provider rate limits in <code>UsageQuotasView</code>, manage multi-step plans in <code>TodoDock</code>, auto-summarize long threads near context floors, and purge local SQLite retention logs on your own schedule.</p>
           </div>
           <div class="timeline" aria-hidden="true">
-            <span class="done">Context floor &amp; auto-summarization</span>
-            <span class="done">InspectorPanel file &amp; hunk telemetry</span>
-            <span class="current">Configurable SQLite retention policy</span>
+            <div class="timeline-row done"><span>01</span> Context floor &amp; auto-summarization</div>
+            <div class="timeline-row done"><span>02</span> InspectorPanel file &amp; hunk telemetry</div>
+            <div class="timeline-row current"><span>03</span> Configurable SQLite retention policy</div>
           </div>
         </article>
       </div>
@@ -605,29 +596,29 @@
 
     <!-- SECURITY POSTURE MATRIX -->
     <section class="security-section section-wrap" id="security">
-      <div class="section-heading">
-        <div class="eyebrow">SECURITY POSTURE</div>
-        <h2>Offline-first renderer.<br><span class="muted-gradient">Compile-time Electron fuses.</span></h2>
+      <div class="section-heading" data-reveal>
+        <div class="eyebrow"><span class="eyebrow-tag">03</span><span>SECURITY POSTURE</span></div>
+        <h2>Offline-first renderer and compile-time Electron fuses.</h2>
         <p>Security isn't a settings checkbox—it's compiled into the binary and enforced at every IPC boundary.</p>
       </div>
 
-      <div class="security-grid">
-        <div class="sec-card">
+      <div class="security-grid" data-reveal-stagger>
+        <div class="sec-card" data-reveal>
           <span class="sec-tag">OS HARDWARE KEYRING</span>
           <h3>Electron <code>safeStorage</code></h3>
           <p>API keys stay encrypted in your host OS keychain and are never leaked to the renderer. Linux <code>basic_text</code> unencrypted persistence is explicitly refused.</p>
         </div>
-        <div class="sec-card">
+        <div class="sec-card" data-reveal>
           <span class="sec-tag">BINARY HARDENING</span>
           <h3><code>@electron/fuses</code></h3>
           <p>Packaged builds flip <code>RunAsNode: false</code>, <code>OnlyLoadAppFromAsar: true</code>, <code>EnableNodeCliInspectArguments: false</code>, and ASAR integrity checks.</p>
         </div>
-        <div class="sec-card">
+        <div class="sec-card" data-reveal>
           <span class="sec-tag">ZERO TELEMETRY / ZERO CDNs</span>
           <h3>Strict <code>connect-src 'none'</code></h3>
           <p>All Lucide icons, provider SVGs, and typography are bundled offline. The production renderer blocks external network calls; only the main process talks to your chosen provider.</p>
         </div>
-        <div class="sec-card">
+        <div class="sec-card" data-reveal>
           <span class="sec-tag">DEVELOPER GIT POLICY</span>
           <h3>Human-Controlled Git</h3>
           <p>VersaRail AI never executes autonomous <code>git commit</code> or <code>git push</code> commands. Changes stay cleanly in your working tree until you inspect and commit them yourself.</p>
@@ -638,13 +629,13 @@
     <!-- 3-STEP WORKFLOW -->
     <section class="workflow-section" id="workflow">
       <div class="section-wrap workflow-inner">
-        <div class="section-heading">
-          <div class="eyebrow">HOW IT WORKS</div>
-          <h2>From prompt to <span class="gradient-text">verified commit.</span></h2>
+        <div class="section-heading" data-reveal>
+          <div class="eyebrow"><span class="eyebrow-tag">04</span><span>HOW IT WORKS</span></div>
+          <h2>From prompt to verified commit.</h2>
           <p>Stay in the driver's seat at every step—from choosing your provider to reviewing the final unified diff.</p>
         </div>
-        <div class="steps">
-          <div class="step">
+        <div class="steps" data-reveal-stagger>
+          <div class="step" data-reveal>
             <div class="step-number">01</div>
             <div class="step-icon">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -661,7 +652,7 @@
             </svg>
           </div>
 
-          <div class="step">
+          <div class="step" data-reveal>
             <div class="step-number">02</div>
             <div class="step-icon">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -678,7 +669,7 @@
             </svg>
           </div>
 
-          <div class="step">
+          <div class="step" data-reveal>
             <div class="step-number">03</div>
             <div class="step-icon">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -694,10 +685,9 @@
 
     <!-- MULTI-PLATFORM DOWNLOAD CENTER -->
     <section class="download-section section-wrap" id="download">
-      <div class="download-card">
-        <div class="download-orb" aria-hidden="true"></div>
-        <div class="eyebrow"><span class="pulse" aria-hidden="true"></span> DESKTOP INSTALLERS · GITHUB RELEASES</div>
-        <h2>Your local AI harness<br>starts <span class="gradient-text">here.</span></h2>
+      <div class="download-card" data-reveal>
+        <div class="eyebrow"><span class="eyebrow-tag">05</span><span>DESKTOP INSTALLERS · GITHUB RELEASES</span></div>
+        <h2>Install VersaRail AI on your workstation.</h2>
         <p class="download-lede">Installers are distributed directly via GitHub Releases with SHA-256 verification. Choose your platform below:</p>
 
         <!-- Platform Switcher Tabs -->
@@ -805,5 +795,6 @@
   </div>
   <div class="sr-only" id="liveAnnouncer" aria-live="polite"></div>
   <script src="/script.js"></script>
+  <script type="module" src="/scene3d.js"></script>
 </body>
 </html>

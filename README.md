@@ -5,9 +5,10 @@ Static showcase and multi-platform download website for [**VersaRail AI**](https
 ## Structure
 
 - `index.html` — Single-page showcase, interactive desktop workspace preview, Open Graph / X social card metadata, and OS-aware download center.
-- `styles.css` — Dark VersaRail AI design tokens (`#090a0f`, `#4f46e5`, `#38bdf8`), responsive layout, and contained ambient glow layers (`overflow-x: clip`).
-- `script.js` — Client-side OS detection, accessible mobile navigation, interactive preview views (`Chat & Diff`, `AI Providers` 429 failover simulator, `Permissions` TOCTOU guard, `Usage & Quotas`), and clipboard verification copy.
-- `assets/` — Vector favicon (`favicon.svg`), `1200×630` social share image (`og-image.png`), app mark (`versarail-mark.png`), and 16 provider SVG icons (`assets/providers/`).
+- `styles.css` — Dark and light VersaRail AI theme tokens (`#090a0f` / `#f8fafc`), 3D perspective preview, scroll-reveal transitions, theme-aware circle cursor, and responsive breakpoints (`overflow-x: clip`).
+- `script.js` — Theme switcher, client-side OS detection, accessible mobile navigation, interactive preview views (`Chat & Diff`, `AI Providers` 429 failover simulator, `Permissions` TOCTOU guard, `Usage & Quotas`), scroll-reveal triggers, and custom cursor loop.
+- `scene3d.js` — Theme-synchronized Three.js WebGL execution rail lattice, geometric security core, and scroll-reactive camera depth.
+- `assets/` — Local Three.js subset (`assets/vendor/three.min.js`), vector favicon (`favicon.svg`), `1200×630` social share image (`og-image.png`), app mark (`versarail-mark.png`), and 16 provider SVG icons (`assets/providers/`).
 - `_headers` — Cloudflare Pages security and asset caching headers.
 - `404.html` & `robots.txt` — Static fallback and crawler directives.
 

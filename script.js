@@ -275,7 +275,7 @@
         pvGroq.classList.add('active');
         pvGroqState.textContent = 'Active Failover';
         pvGroqState.className = 'pv-state ok';
-        if (healthText) healthText.textContent = 'Groq Llama 3.3 70B · Failover';
+        if (healthText) healthText.textContent = 'GROQ LLAMA 3.3 70B · FAILOVER';
         simFailoverBtn.textContent = 'Restore Primary';
         announce('Simulated pre-first-byte 429 failover to GroqCloud.');
       } else {
@@ -290,7 +290,7 @@
         pvGroq.classList.remove('active');
         pvGroqState.textContent = 'Standby';
         pvGroqState.className = 'pv-state';
-        if (healthText) healthText.textContent = 'Gemini 2.5 Flash · Ready';
+        if (healthText) healthText.textContent = 'GEMINI 2.5 FLASH · 184MS';
         simFailoverBtn.textContent = 'Simulate 429 Failover';
         announce('Restored primary provider Gemini.');
       }
@@ -428,6 +428,77 @@
     window.addEventListener('blur', () => {
       cursorLayer.classList.remove('is-visible', 'is-pressed');
     });
+  }
+
+  // Scroll Progress Rail, Scroll-Scrubbed 3D App Tilt & IntersectionObserver Choreography
+  const scrollProgressEl = document.getElementById('scrollProgress');
+  const appPreviewEl = document.getElementById('appPreview');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function syncScrollAnimations() {
+    const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+    const ratio = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
+
+    if (scrollProgressEl) {
+      scrollProgressEl.style.transform = `scaleX(${ratio.toFixed(4)})`;
+    }
+
+    if (appPreviewEl && !reducedMotion && window.innerWidth > 980) {
+      const heroShift = Math.min(window.scrollY / 650, 1);
+      const tiltY = -5.5 + heroShift * 3.8;
+      const tiltX = 2.5 - heroShift * 1.4;
+      appPreviewEl.style.setProperty('--tilt-y', `${tiltY.toFixed(2)}deg`);
+      appPreviewEl.style.setProperty('--tilt-x', `${tiltX.toFixed(2)}deg`);
+    }
+  }
+
+  syncScrollAnimations();
+  window.addEventListener('scroll', syncScrollAnimations, { passive: true });
+  window.addEventListener('resize', syncScrollAnimations);
+
+  // Staggered Scroll Reveal Triggers
+  const revealNodes = document.querySelectorAll('[data-reveal]');
+  document.querySelectorAll('[data-reveal-stagger]').forEach((group) => {
+    const children = group.querySelectorAll('[data-reveal]');
+    children.forEach((child, idx) => {
+      child.style.setProperty('--reveal-delay', `${Math.min(idx * 45, 360)}ms`);
+    });
+  });
+
+  function revealVisibleOrPassed() {
+    const cutoff = window.innerHeight * 0.94;
+    revealNodes.forEach((node) => {
+      if (node.classList.contains('is-revealed')) return;
+      if (node.getBoundingClientRect().top <= cutoff) {
+        node.classList.add('is-revealed');
+      }
+    });
+  }
+
+  if (!reducedMotion && 'IntersectionObserver' in window) {
+    document.documentElement.classList.add('anim-ready');
+    const revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -24px 0px' }
+    );
+
+    revealNodes.forEach((node) => {
+      if (node.getBoundingClientRect().top <= window.innerHeight * 0.94) {
+        node.classList.add('is-revealed');
+      } else {
+        revealObserver.observe(node);
+      }
+    });
+    window.addEventListener('scroll', revealVisibleOrPassed, { passive: true });
+  } else {
+    revealNodes.forEach((node) => node.classList.add('is-revealed'));
   }
 })();
 
