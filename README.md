@@ -4,11 +4,11 @@ Static showcase and multi-platform download website for [**VersaRail AI**](https
 
 ## Structure
 
-- `index.html` — Single-page showcase, interactive desktop workspace preview, Open Graph / X social card metadata, and OS-aware download center.
+- `index.html` — Showcase sections (Providers, 6-card Capabilities & Security, Download center), interactive desktop workspace preview (`Chat`, `AI Providers`, `Usage & Quotas`, `Settings`, plus inline tool approval dialog), Open Graph / X social card metadata, and OS-aware download links.
 - `styles.css` — Dark and light VersaRail AI theme tokens (`#090a0f` / `#f8fafc`), 3D perspective preview, scroll-reveal transitions, theme-aware circle cursor, and responsive breakpoints (`overflow-x: clip`).
-- `script.js` — Theme switcher, client-side OS detection, accessible mobile navigation, interactive preview views (`Chat & Diff`, `AI Providers` 429 failover simulator, `Permissions` TOCTOU guard, `Usage & Quotas`), scroll-reveal triggers, and custom cursor loop.
-- `scene3d.js` — Theme-synchronized Three.js WebGL execution rail lattice, geometric security core, and scroll-reactive camera depth.
-- `assets/` — Local Three.js subset (`assets/vendor/three.min.js`), vector favicon (`favicon.svg`), `1200×630` social share image (`og-image.png`), app mark (`versarail-mark.png`), and 16 provider SVG icons (`assets/providers/`).
+- `script.js` — Theme switcher, client-side OS detection, accessible mobile navigation, interactive preview views (`Chat`, `AI Providers` failover simulator, `Usage & Quotas`, `Settings`, inline tool approval modal), scroll-reveal triggers, and custom cursor loop.
+- `scene3d.js` — Theme-synchronized Three.js WebGL execution rail lattice, sculpted 3D VersaRail V-logo, and scroll-reactive camera depth.
+- `assets/` — Local Three.js subset (`assets/vendor/three.min.js`), vector favicon (`favicon.svg`), `1200×630` social share image (`og-image.png`), app mark (`versarail-mark.png`), and 15 provider SVG icons (`assets/providers/`, covering the 12 dedicated adapters plus `custom`, `ollama`, and `openai-compatible` gateway icons).
 - `_headers` — Cloudflare Pages security and asset caching headers.
 - `404.html` & `robots.txt` — Static fallback and crawler directives.
 

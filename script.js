@@ -60,9 +60,29 @@
       const current = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
       const next = current === 'light' ? 'dark' : 'light';
       applyTheme(next, true);
+      syncSettingsThemeButtons(next);
       announce(`Switched to ${next} mode.`);
     });
   }
+
+  function syncSettingsThemeButtons(theme) {
+    document.querySelectorAll('.settings-theme-btn').forEach((btn) => {
+      const active = btn.dataset.previewTheme === theme;
+      btn.classList.toggle('mini-btn-primary', active);
+      btn.classList.toggle('mini-btn-ghost', !active);
+    });
+  }
+
+  syncSettingsThemeButtons(document.documentElement.dataset.theme || 'dark');
+
+  document.querySelectorAll('.settings-theme-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const next = btn.dataset.previewTheme === 'light' ? 'light' : 'dark';
+      applyTheme(next, true);
+      syncSettingsThemeButtons(next);
+      announce(`Switched to ${next} mode.`);
+    });
+  });
 
   // Dynamic footer year
   const yearEl = document.getElementById('year');
@@ -249,7 +269,7 @@
 
   if (sidebarSettingsBtn) {
     sidebarSettingsBtn.addEventListener('click', () => {
-      activatePreviewView('permissions');
+      activatePreviewView('settings');
     });
   }
 
@@ -309,7 +329,7 @@
       }, 450);
 
       if (diffStatusNote) {
-        diffStatusNote.textContent = initialDiffStatusText || 'Baseline SHA-256 verified · Ready for review';
+        diffStatusNote.textContent = initialDiffStatusText || 'Baseline verified';
         diffStatusNote.className = initialDiffStatusClass;
       }
       if (chatContextTitle) {
@@ -318,6 +338,7 @@
       recentChatItems.forEach((item) => {
         item.classList.toggle('active', item.dataset.chatTopic === 'atomic');
       });
+      closePermissionModal();
       activatePreviewView('chat');
       announce('Preview state refreshed.');
     });
@@ -371,15 +392,45 @@
     });
   });
 
+  // Inline Permission Approval Modal (mirrors PermissionModal.tsx triggered from tool runs)
+  const permModalBackdrop = document.getElementById('permModalBackdrop');
+  const openPermModalBtn = document.getElementById('openPermModalBtn');
+  const closePermModalBtn = document.getElementById('closePermModalBtn');
+
+  function openPermissionModal() {
+    if (!permModalBackdrop) return;
+    permModalBackdrop.hidden = false;
+    permModalBackdrop.classList.add('is-open');
+    announce('Tool approval dialog opened.');
+  }
+
+  function closePermissionModal() {
+    if (!permModalBackdrop) return;
+    permModalBackdrop.classList.remove('is-open');
+    permModalBackdrop.hidden = true;
+  }
+
+  if (openPermModalBtn) {
+    openPermModalBtn.addEventListener('click', openPermissionModal);
+  }
+  if (closePermModalBtn) {
+    closePermModalBtn.addEventListener('click', closePermissionModal);
+  }
+  if (permModalBackdrop) {
+    permModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === permModalBackdrop) closePermissionModal();
+    });
+  }
+
   if (runPreviewBtn && composerPromptText) {
     runPreviewBtn.addEventListener('click', () => {
       const text = composerPromptText.textContent.toLowerCase();
       if (text.includes('429') || text.includes('groq')) {
         activatePreviewView('providers');
-      } else if (text.includes('vitest') || text.includes('runner')) {
-        activatePreviewView('permissions');
+      } else if (text.includes('vitest') || text.includes('approval') || text.includes('command')) {
+        openPermissionModal();
       } else if (diffStatusNote) {
-        diffStatusNote.textContent = 'Baseline SHA-256 verified · Ready for review';
+        diffStatusNote.textContent = 'Baseline hash verified';
         diffStatusNote.className = 'diff-status-note status-info';
       }
     });
@@ -439,7 +490,7 @@
     });
   }
 
-  // Interactive Preview: Permission Broker TOCTOU Guard
+  // Interactive Preview: Permission Approval Dialog Simulation
   const permArgsCode = document.getElementById('permArgsCode');
   const permHashCode = document.getElementById('permHashCode');
   const permResultBox = document.getElementById('permResultBox');
@@ -450,31 +501,33 @@
   if (permArgsCode && permHashCode && permResultBox && permApproveBtn && permTamperBtn && permResetBtn) {
     const defaultArgs = '["npx", "vitest", "run", "tests/security/"]';
     const defaultHash = 'sha256:8f9c2a04...77e41b';
+    const defaultMsg = 'Execution pauses until your approval matches the locked argument digest.';
 
     permApproveBtn.addEventListener('click', () => {
       permArgsCode.textContent = defaultArgs;
       permHashCode.textContent = defaultHash;
       permResultBox.className = 'perm-result approved';
       permResultBox.textContent =
-        'SHA-256 payload verified. AgentCommandRunner executed with 1 MB output cap & secret redaction.';
-      announce('Tool execution approved with verified SHA-256 payload hash.');
+        'Digest verified — sandboxed command running with 1 MB output cap & secret redaction.';
+      announce('Tool execution approved with verified argument digest.');
     });
 
     permTamperBtn.addEventListener('click', () => {
       permArgsCode.textContent = '["sh", "-c", "cat ~/.ssh/id_rsa"]  // MUTATED';
-      permHashCode.textContent = 'expected: 8f9c2a04... ≠ actual: d41d8cd9...';
+      permHashCode.textContent = 'expected: 8f9c2a04... != actual: d41d8cd9...';
       permResultBox.className = 'perm-result tampered';
       permResultBox.textContent =
-        'ToctouTamperingError: Approved argument hash mismatch — execution aborted immediately.';
-      announce('TOCTOU tampering detected and aborted.');
+        'Tamper blocked: approved argument digest mismatch — execution aborted immediately.';
+      announce('Argument tampering detected and aborted.');
     });
 
     permResetBtn.addEventListener('click', () => {
       permArgsCode.textContent = defaultArgs;
       permHashCode.textContent = defaultHash;
       permResultBox.className = 'perm-result';
-      permResultBox.textContent =
-        'Execution blocked until explicit user decision matches approved SHA-256 hash.';
+      permResultBox.textContent = defaultMsg;
+      closePermissionModal();
+      announce('Command execution denied.');
     });
   }
 
@@ -495,7 +548,7 @@
     let hasMoved = false;
 
     const interactiveSelector =
-      'a, button, [role="tab"], [role="button"], .provider-tile, .feature-card, .sec-card';
+      'a, button, [role="tab"], [role="button"], .provider-tile, .feature-card';
     const textSelector = 'code, pre, input, textarea';
 
     function renderCursor() {
