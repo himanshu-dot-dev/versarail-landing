@@ -511,12 +511,12 @@ if (canvas) {
         coreBaseX = 0;
         coreBaseY = -0.35;
         coreGroup.position.set(coreBaseX, coreBaseY, -4.6);
-        coreGroup.scale.setScalar(0.86);
+        coreGroup.scale.setScalar(1.04);
       } else {
         coreBaseX = 0;
         coreBaseY = 0.05;
         coreGroup.position.set(coreBaseX, coreBaseY, -2.6);
-        coreGroup.scale.setScalar(1.08);
+        coreGroup.scale.setScalar(1.36);
       }
     }
 
