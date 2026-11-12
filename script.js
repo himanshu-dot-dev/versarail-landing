@@ -1,6 +1,7 @@
 (() => {
   'use strict';
 
+  console.log(' test console ')
   const RELEASE_BASE =
     'https://github.com/himanshu-dot-dev/versarail-ai/releases/latest/download';
 
